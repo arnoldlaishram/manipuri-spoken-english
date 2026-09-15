@@ -1,0 +1,376 @@
+/* Manipuri textile (phanek) horizontal bands: each card is a stack of
+   registers with colour-coded left edges. Indigo-grey ground, madder red
+   accent, turmeric secondary, moss for success. */
+
+:root{
+  --paper:#EDEFF3; --surface:#F8F9FB; --ink:#14172A; --muted:#5C6377;
+  --line:#D3D8E1; --line-soft:#E2E6ED;
+  --madder:#A93A2E; --on-accent:#FFFFFF; --turmeric:#9E6F16; --moss:#3D6A53;
+  --shadow:0 1px 2px rgba(20,23,42,.05), 0 6px 20px rgba(20,23,42,.05);
+  --serif:"Fraunces", Georgia, "Times New Roman", serif;
+  --sans:"IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --paper:#0F111A; --surface:#181B27; --ink:#E7E9F0; --muted:#99A1B5;
+  --line:#2B3142; --line-soft:#222736;
+  --madder:#E18374; --on-accent:#12141F; --turmeric:#D6A445; --moss:#7FB294;
+  --shadow:0 1px 2px rgba(0,0,0,.35), 0 6px 20px rgba(0,0,0,.28);
+  color-scheme: dark;
+}}
+:root[data-theme="dark"]{
+  --paper:#0F111A; --surface:#181B27; --ink:#E7E9F0; --muted:#99A1B5;
+  --line:#2B3142; --line-soft:#222736;
+  --madder:#E18374; --on-accent:#12141F; --turmeric:#D6A445; --moss:#7FB294;
+  --shadow:0 1px 2px rgba(0,0,0,.35), 0 6px 20px rgba(0,0,0,.28);
+  color-scheme: dark;
+}
+
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{background:var(--paper); color:var(--ink); font-family:var(--sans);
+  font-size:16px; line-height:1.5; -webkit-font-smoothing:antialiased}
+img{max-width:100%}
+:focus-visible{outline:2px solid var(--turmeric); outline-offset:2px}
+@media (prefers-reduced-motion: reduce){ *{animation:none !important; transition:none !important} }
+
+.wrap{max-width:660px; margin:0 auto; padding-inline:20px; padding-block:24px 120px}
+/* room for the floating question button, which is always there */
+.wrap{padding-block:24px 108px}
+
+header{display:flex; align-items:baseline; gap:11px; flex-wrap:wrap; margin-bottom:20px}
+.mark{font-family:var(--serif); font-weight:700; font-size:27px; letter-spacing:-.02em; line-height:1}
+.mark em{font-style:normal; color:var(--madder)}
+.tag{font-size:11.5px; color:var(--muted); letter-spacing:.07em; text-transform:uppercase; font-weight:500}
+.iconlink{margin-left:auto; display:flex; gap:7px; align-items:center}
+.theme-btn{background:none; border:1px solid var(--line); color:var(--muted); border-radius:999px;
+  padding:4px 11px; font:inherit; font-size:12px; cursor:pointer}
+.theme-btn:hover{color:var(--ink); border-color:var(--muted)}
+select.theme-btn{max-width:150px; background:var(--surface)}
+@media (max-width:520px){ select.theme-btn{max-width:104px} }
+
+.lead{font-size:15.5px; color:var(--muted); line-height:1.6; margin:0 0 22px; max-width:56ch}
+.sect{font-size:11.5px; letter-spacing:.09em; text-transform:uppercase; color:var(--muted);
+  font-weight:600; margin:30px 0 11px; display:flex; align-items:baseline; gap:9px}
+.sect s{text-decoration:none; text-transform:none; letter-spacing:0; font-weight:400; opacity:.75}
+
+/* ---------- resume card ---------- */
+.today{background:var(--surface); border:1px solid var(--line); border-left:3px solid var(--madder);
+  border-radius:4px; padding:19px 18px; box-shadow:var(--shadow)}
+.today h2{font-family:var(--serif); font-size:24px; font-weight:700; margin:0 0 3px; letter-spacing:-.01em}
+.today .sub{font-size:14.5px; color:var(--muted); margin-bottom:15px; line-height:1.55}
+.bigbtn{display:block; width:100%; background:var(--madder); color:var(--on-accent); border:0;
+  border-radius:3px; padding:15px 20px; font:inherit; font-weight:600; font-size:17px; cursor:pointer}
+.bigbtn:hover{filter:brightness(1.08)}
+
+/* ---------- levels ---------- */
+.levels{display:flex; flex-direction:column; gap:11px}
+.level{background:var(--surface); border:1px solid var(--line); border-left:3px solid var(--line);
+  border-radius:4px; overflow:hidden}
+.level.active{border-left-color:var(--madder)}
+.level.complete{border-left-color:var(--moss)}
+.level-head{display:flex; gap:14px; align-items:center; width:100%; text-align:left;
+  background:none; border:0; padding:15px 17px; cursor:pointer; color:var(--ink); font:inherit}
+.level-head:hover{background:color-mix(in srgb, var(--madder) 5%, transparent)}
+.level-n{font-family:var(--serif); font-size:13px; font-weight:700; color:var(--muted);
+  border:1px solid var(--line); border-radius:999px; width:30px; height:30px; flex:none;
+  display:grid; place-items:center; line-height:1}
+.level.complete .level-n{color:var(--moss); border-color:var(--moss)}
+.level-t{flex:1; min-width:0}
+.level-t b{display:block; font-family:var(--serif); font-size:19px; font-weight:600; line-height:1.3}
+.level-t s{display:block; text-decoration:none; font-size:13.5px; color:var(--muted); margin-top:2px}
+.level-meter{display:flex; gap:3px; margin-top:7px}
+.level-meter i{height:4px; flex:1; border-radius:2px; background:var(--line); display:block; max-width:34px}
+.level-meter i.on{background:var(--moss)}
+.level-chev{color:var(--muted); flex:none; font-size:13px}
+
+.level.soon{opacity:.5}
+.level-row{display:flex; gap:14px; align-items:center; padding:15px 17px}
+
+.steps{border-top:1px solid var(--line-soft); padding:6px 0 8px}
+.step{display:flex; gap:12px; align-items:center; width:100%; text-align:left; background:none;
+  border:0; padding:11px 17px 11px 20px; cursor:pointer; color:var(--ink); font:inherit}
+.step:hover{background:color-mix(in srgb, var(--madder) 6%, transparent)}
+.step-tick{width:19px; height:19px; border-radius:999px; border:1.5px solid var(--line);
+  flex:none; display:grid; place-items:center; font-size:11px; color:transparent}
+.step.done .step-tick{background:var(--moss); border-color:var(--moss); color:var(--on-accent)}
+.step-t{flex:1; min-width:0}
+.step-t b{display:block; font-weight:500; font-size:15.5px; line-height:1.35}
+.step-t s{display:block; text-decoration:none; font-size:13px; color:var(--muted); margin-top:1px}
+.step-kind{font-size:10px; letter-spacing:.07em; text-transform:uppercase; color:var(--muted);
+  border:1px solid var(--line); border-radius:2px; padding:2px 6px; flex:none}
+
+/* ---------- activity card ---------- */
+.card{background:var(--surface); border:1px solid var(--line); border-radius:4px;
+  box-shadow:var(--shadow); overflow:hidden}
+.band{padding:17px 18px 19px; border-left:3px solid transparent}
+.band + .band{border-top:1px solid var(--line-soft)}
+.b-say{border-left-color:var(--madder)}
+.b-use{border-left-color:var(--turmeric)}
+.b-rp{border-left-color:var(--moss)}
+.b-fb{border-left-color:var(--line)}
+
+.crumbs{display:flex; align-items:center; gap:9px; margin-bottom:14px; flex-wrap:wrap}
+.back{background:none; border:0; color:var(--muted); font:inherit; font-size:13.5px; cursor:pointer;
+  padding:0; text-decoration:underline; text-underline-offset:3px}
+.back:hover{color:var(--madder)}
+.crumbs .where{font-size:13.5px; color:var(--muted)}
+.progress{height:3px; background:var(--line-soft); border-radius:2px; overflow:hidden; margin-bottom:16px}
+.progress i{display:block; height:100%; background:var(--turmeric); transition:width .35s ease}
+
+.blabel{display:flex; align-items:center; gap:8px; margin-bottom:9px; font-size:11.5px;
+  letter-spacing:.08em; text-transform:uppercase; color:var(--muted); font-weight:600}
+.blabel .gloss{text-transform:none; letter-spacing:0; font-weight:400; opacity:.7}
+.blabel .spacer{margin-left:auto}
+.pill{font-size:10.5px; letter-spacing:.07em; text-transform:uppercase; font-weight:600;
+  color:var(--muted); border:1px solid var(--line); border-radius:2px; padding:2px 6px; flex:none}
+
+.phrase{font-family:var(--serif); font-size:29px; font-weight:600; line-height:1.3;
+  letter-spacing:-.01em; display:flex; gap:11px; align-items:flex-start}
+.phrase .words{flex:1; min-width:0}
+@media (max-width:430px){ .phrase{font-size:24px} }
+.meaning{font-size:15.5px; color:var(--muted); margin-top:9px; line-height:1.55}
+.situ{font-family:var(--serif); font-size:19.5px; line-height:1.4; margin-bottom:13px}
+
+.w-hit{color:var(--ink)}
+.w-miss{color:var(--madder); text-decoration:underline; text-decoration-style:wavy;
+  text-decoration-thickness:1px; text-underline-offset:5px}
+
+.icon-btn{background:none; border:1px solid var(--line); color:var(--muted); border-radius:999px;
+  width:32px; height:32px; cursor:pointer; font-size:13px; display:grid; place-items:center;
+  padding:0; flex:none}
+.icon-btn:hover{color:var(--ink); border-color:var(--muted)}
+.icon-btn.speaking{color:var(--turmeric); border-color:var(--turmeric)}
+
+.mic{display:flex; align-items:center; gap:12px; flex-wrap:wrap; margin-top:16px}
+.mic-btn{display:flex; align-items:center; gap:10px; background:var(--madder); color:var(--on-accent);
+  border:0; border-radius:999px; padding:11px 22px 11px 18px; font:inherit; font-weight:600;
+  font-size:15px; cursor:pointer}
+.mic-btn:hover{filter:brightness(1.08)}
+.mic-btn:disabled{opacity:.45; cursor:default; filter:none}
+.mic-btn .ring{width:11px; height:11px; border-radius:50%; background:currentColor; flex:none}
+.mic-btn.live{background:var(--turmeric)}
+.mic-btn.live .ring{animation:beat 1s ease-in-out infinite}
+@keyframes beat{0%,100%{transform:scale(.7); opacity:.55} 50%{transform:scale(1.25); opacity:1}}
+.mic-note{font-size:13.5px; color:var(--muted); flex:1; min-width:140px}
+.heard{margin-top:13px; font-size:15px; color:var(--muted)}
+.heard b{font-family:var(--serif); font-size:17.5px; color:var(--ink); font-weight:500}
+
+.btn{background:var(--madder); color:var(--on-accent); border:0; border-radius:3px; padding:10px 20px;
+  font:inherit; font-weight:600; font-size:14px; cursor:pointer}
+.btn:hover{filter:brightness(1.08)}
+.btn:disabled{opacity:.4; cursor:default; filter:none}
+.btn.ghost{background:none; color:var(--muted); border:1px solid var(--line); font-weight:500}
+.btn.ghost:hover{color:var(--ink); border-color:var(--muted); filter:none}
+.btnrow{display:flex; gap:8px; flex-wrap:wrap; align-items:center; margin-top:15px}
+
+.tin{width:100%; background:var(--paper); border:1px solid var(--line); border-radius:3px;
+  padding:11px 13px; font-family:var(--serif); font-size:18px; color:var(--ink); outline:none}
+.tin:focus{border-color:var(--moss)}
+.typelabel{font-size:13px; color:var(--muted); margin-bottom:7px; font-weight:600}
+.typelabel span{font-weight:400; opacity:.8}
+
+.fb{display:flex; flex-direction:column; gap:7px}
+.fb .head{font-weight:600; font-size:15.5px}
+.fb.ok .head{color:var(--moss)}
+.fb.mid .head{color:var(--turmeric)}
+.fb.no .head{color:var(--madder)}
+.fb .exp{font-size:15px; color:var(--muted); line-height:1.55}
+.fb .big{font-family:var(--serif); font-size:19px; color:var(--ink);
+  display:flex; gap:9px; align-items:flex-start; flex-wrap:wrap}
+
+/* ---------- sentence builder ---------- */
+.whybox{background:color-mix(in srgb, var(--turmeric) 11%, transparent); border-radius:3px;
+  padding:12px 14px; font-size:15px; line-height:1.6}
+.pat{font-family:var(--serif); font-size:20px; color:var(--turmeric); font-weight:600; margin-top:9px}
+.chips{display:flex; flex-wrap:wrap; gap:8px; margin-top:13px}
+.chip{background:var(--paper); border:1px solid var(--line); border-radius:999px; padding:10px 17px;
+  font-family:var(--serif); font-size:18px; color:var(--ink); cursor:pointer; line-height:1.2}
+.chip:hover{border-color:var(--madder); color:var(--madder)}
+.chip.used{opacity:.22; pointer-events:none}
+.slot{min-height:58px; border:1px dashed var(--line); border-radius:3px; padding:10px 12px;
+  display:flex; flex-wrap:wrap; gap:8px; align-items:center; background:var(--paper); margin-top:12px}
+.slot .ph{color:var(--muted); font-size:14px; font-family:var(--sans)}
+.slot .chip{border-color:var(--moss); color:var(--moss)}
+.slot.good{border-style:solid; border-color:var(--moss)}
+.eg{font-family:var(--serif); font-size:18px; color:var(--muted); margin-top:10px;
+  display:flex; gap:9px; align-items:flex-start; line-height:1.4}
+.eg .t{flex:1; min-width:0}
+
+/* ---------- her day ---------- */
+.seg{display:flex; flex-direction:column; gap:9px; margin-top:2px}
+.seg button{background:var(--surface); border:1px solid var(--line); border-left:3px solid var(--line);
+  border-radius:4px; padding:16px 17px; font:inherit; cursor:pointer; color:var(--ink); text-align:left}
+.seg button:hover{border-color:var(--madder); border-left-color:var(--madder)}
+.seg b{display:block; font-family:var(--serif); font-size:20px; font-weight:600; line-height:1.3}
+.seg s{display:block; text-decoration:none; font-size:13.5px; color:var(--muted); margin-top:2px}
+.story{font-family:var(--serif); font-size:20px; line-height:1.7}
+.story p{margin:0 0 14px}
+.fixline{font-family:var(--sans); font-size:14px; color:var(--muted); margin-top:3px; line-height:1.5}
+.fixline b{color:var(--moss); font-weight:600}
+.strike{text-decoration:line-through; opacity:.5}
+
+/* ---------- role-play ---------- */
+.rp-goal{background:color-mix(in srgb, var(--moss) 9%, transparent); border-radius:3px;
+  padding:11px 13px; font-size:15px; line-height:1.55; margin-bottom:15px}
+.rp-goal b{display:block; font-size:11.5px; letter-spacing:.08em; text-transform:uppercase;
+  color:var(--moss); margin-bottom:4px}
+.turns{display:flex; flex-direction:column; gap:11px; margin-bottom:6px}
+.turn{display:flex; gap:10px; align-items:flex-start}
+.turn .who{font-size:10.5px; letter-spacing:.07em; text-transform:uppercase; font-weight:600;
+  color:var(--muted); min-width:58px; flex:none; padding-top:5px}
+.turn .line{font-family:var(--serif); font-size:18px; line-height:1.4; flex:1; min-width:0}
+.turn.you .line{color:var(--madder)}
+.turn .repair{display:block; font-family:var(--sans); font-size:13.5px; color:var(--muted);
+  margin-top:5px; line-height:1.5}
+
+.thinking{display:flex; align-items:center; gap:9px; color:var(--muted); font-size:14px; padding:5px 0}
+.dot{width:7px; height:7px; border-radius:50%; background:var(--madder); animation:pulse 1.3s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:.25; transform:scale(.8)} 50%{opacity:1; transform:scale(1)}}
+
+.done-box h2{font-family:var(--serif); font-size:26px; font-weight:700; margin:0 0 6px; text-wrap:balance}
+.can{list-style:none; margin:14px 0 0; padding:0; display:flex; flex-direction:column; gap:9px}
+.can li{display:flex; gap:10px; align-items:flex-start; font-size:16px}
+.can li::before{content:"✓"; color:var(--moss); font-weight:700; flex:none}
+.weak{margin-top:15px; font-size:14.5px; color:var(--muted); line-height:1.55;
+  border-top:1px solid var(--line-soft); padding-top:13px}
+
+/* ---------- microphone trouble ---------- */
+.micwall{background:color-mix(in srgb, var(--madder) 9%, transparent); border-radius:3px;
+  padding:14px 15px; margin-top:15px; font-size:15px; line-height:1.6}
+.micwall .h{font-weight:600; color:var(--madder); margin-bottom:5px}
+.micwall .en{font-size:13.5px; color:var(--muted); margin-top:7px; line-height:1.55}
+.linkrow{display:flex; gap:7px; margin-top:9px; flex-wrap:wrap}
+.linkrow input{flex:1; min-width:150px; background:var(--paper); border:1px solid var(--line);
+  border-radius:3px; padding:9px 11px; font-family:var(--sans); font-size:12.5px; color:var(--muted)}
+.banner{background:color-mix(in srgb, var(--madder) 10%, transparent); border-left:3px solid var(--madder);
+  border-radius:3px; padding:14px 16px; margin-bottom:20px; font-size:14.5px; line-height:1.6}
+.banner b{display:block; color:var(--madder); margin-bottom:4px; font-size:15px}
+.banner .en{font-size:13px; color:var(--muted); margin-top:6px}
+
+/* ---------- the question button ----------
+   A floating head, always in the same corner, always visible. She cannot read
+   English well, so this has to announce itself by shape and position — a thin
+   bar at the bottom reads as part of the page, not as something you press. */
+.askhead{position:fixed; right:18px; bottom:18px; z-index:60; width:62px; height:62px;
+  border-radius:50%; border:2px solid var(--surface); background:var(--surface);
+  cursor:pointer; display:grid; place-items:center; padding:0; overflow:visible;
+  box-shadow:0 4px 16px rgba(0,0,0,.26), 0 2px 5px rgba(0,0,0,.14)}
+.askhead svg{border-radius:50%}
+.askhead-badge{position:absolute; right:-2px; bottom:-2px; width:24px; height:24px;
+  border-radius:50%; background:var(--madder); color:var(--on-accent);
+  border:2px solid var(--surface); display:grid; place-items:center}
+.askhead-badge svg{width:13px; height:13px; border-radius:0}
+.askface{display:inline-grid; place-items:center; width:34px; height:34px; flex:none}
+.askface svg{border-radius:50%}
+.askhead:hover{filter:brightness(1.08); transform:translateY(-1px)}
+.askhead:active{transform:translateY(1px)}
+.askhead .ping{position:absolute; inset:0; border-radius:50%; border:2px solid var(--madder);
+  animation:ping 2.6s ease-out infinite; pointer-events:none}
+@keyframes ping{0%{transform:scale(1); opacity:.55} 70%{transform:scale(1.45); opacity:0} 100%{opacity:0}}
+.askhead-label{position:fixed; right:88px; bottom:34px; z-index:60; background:var(--surface);
+  border:1px solid var(--line); border-radius:999px; padding:7px 14px; font-size:14px;
+  font-weight:600; color:var(--ink); box-shadow:var(--shadow); pointer-events:none; white-space:nowrap}
+@media (max-width:430px){
+  /* No room beside the button on a phone, so sit it above — never hide it.
+     This is the one hint that tells her the button does anything. */
+  .askhead-label{right:14px; bottom:88px; font-size:13px; padding:6px 12px}
+}
+
+.asksheet{position:fixed; inset:0; z-index:70; background:rgba(10,12,20,.38);
+  display:flex; align-items:flex-end; justify-content:center}
+.asksheet-in{background:var(--surface); border-top:3px solid var(--madder);
+  border-radius:10px 10px 0 0; width:100%; max-width:660px; max-height:86vh; overflow-y:auto;
+  padding:18px 20px calc(20px + env(safe-area-inset-bottom)); box-shadow:0 -8px 30px rgba(0,0,0,.25)}
+@media (min-width:560px){
+  .asksheet{align-items:center}
+  .asksheet-in{border-radius:10px; border-top-width:3px; margin:0 18px}
+}
+.asksheet h3{font-family:var(--serif); font-size:21px; font-weight:700; margin:0 0 2px;
+  display:flex; align-items:center; gap:10px}
+.asksheet h3 span{font-family:var(--sans); font-size:13px; font-weight:400; color:var(--muted)}
+.askclose{margin-left:auto; background:none; border:1px solid var(--line); color:var(--muted);
+  border-radius:999px; width:34px; height:34px; font-size:17px; cursor:pointer; line-height:1}
+.askclose:hover{color:var(--ink); border-color:var(--muted)}
+.ask-panel textarea{width:100%; background:var(--paper); border:1px solid var(--line); border-radius:4px;
+  padding:12px 13px; font-family:var(--serif); font-size:17px; color:var(--ink); outline:none;
+  resize:none; min-height:74px; margin:12px 0 10px}
+.ask-panel textarea:focus{border-color:var(--madder)}
+.ask-out{margin-top:14px}
+.ask-a{border-left:3px solid var(--madder); padding:2px 0 2px 13px; display:flex;
+  flex-direction:column; gap:7px}
+.ask-a .en{font-family:var(--serif); font-size:19px; font-weight:600; display:flex;
+  align-items:flex-start; gap:9px}
+.ask-a .why{font-size:15px; color:var(--muted); line-height:1.55}
+.ask-q{font-size:13.5px; color:var(--muted); margin-bottom:9px; font-style:italic}
+.ask-eg{font-size:13px; color:var(--muted); line-height:1.6; margin-top:4px}
+.ask-eg b{color:var(--ink); font-weight:500}
+
+/* ---------- the review card ---------- */
+.duecard{display:flex; gap:14px; align-items:center; width:100%; text-align:left;
+  background:color-mix(in srgb, var(--moss) 12%, var(--surface));
+  border:1px solid var(--moss); border-left:3px solid var(--moss); border-radius:4px;
+  padding:15px 17px; cursor:pointer; color:var(--ink); font:inherit; margin-top:18px}
+.duecard:hover{filter:brightness(1.03)}
+.duenum{font-family:var(--serif); font-size:20px; font-weight:700; color:var(--on-accent);
+  background:var(--moss); border-radius:999px; min-width:38px; height:38px; flex:none;
+  display:grid; place-items:center; line-height:1; padding:0 8px}
+.duet{flex:1; min-width:0}
+.duet b{display:block; font-family:var(--serif); font-size:19px; font-weight:600; line-height:1.3}
+.duet s{display:block; text-decoration:none; font-size:13.5px; color:var(--muted); margin-top:2px}
+
+/* ---------- the fluency clock ---------- */
+.clock{font-family:var(--serif); font-size:62px; font-weight:700; line-height:1;
+  letter-spacing:-.03em; color:var(--madder); text-align:center; margin:12px 0 4px;
+  font-variant-numeric:tabular-nums}
+.clock.low{color:var(--turmeric)}
+.prompts{list-style:none; margin:14px 0 0; padding:0; display:flex; flex-direction:column; gap:8px}
+.prompts li{display:flex; flex-direction:column; gap:1px; border-left:2px solid var(--line-soft);
+  padding-left:11px}
+.prompts li b{font-family:var(--serif); font-size:17px; font-weight:600; line-height:1.35}
+.prompts li span{font-size:13px; color:var(--muted)}
+.rates{display:flex; gap:10px; margin:16px 0 6px; align-items:flex-end}
+.rate{flex:1; background:var(--paper); border:1px solid var(--line); border-radius:4px;
+  padding:12px 8px; text-align:center}
+.rate.last{border-color:var(--moss); background:color-mix(in srgb, var(--moss) 10%, var(--paper))}
+.rate b{display:block; font-family:var(--serif); font-size:27px; font-weight:700; line-height:1;
+  font-variant-numeric:tabular-nums}
+.rate.last b{color:var(--moss)}
+.rate s{display:block; text-decoration:none; font-size:12px; color:var(--muted); margin-top:4px}
+
+.whyhead{display:flex; align-items:center; gap:9px; margin-bottom:8px}
+.whylabel{font-size:11px; letter-spacing:.08em; text-transform:uppercase; font-weight:600;
+  color:var(--turmeric)}
+.en-twin .icon-btn{width:26px; height:26px; font-size:11px; vertical-align:middle}
+
+/* ---------- worked examples ---------- */
+.pairs{list-style:none; margin:16px 0 0; padding:0; display:flex; flex-direction:column; gap:0}
+.pairs li{padding:13px 0; border-bottom:1px solid var(--line-soft)}
+.pairs li:last-child{border-bottom:0}
+.pm{font-family:var(--serif); font-size:19px; line-height:1.35; color:var(--ink)}
+.pe{font-size:15.5px; color:var(--madder); margin-top:4px; display:flex; align-items:center;
+  gap:9px; line-height:1.4}
+
+/* ---------- tense table ---------- */
+.tensewrap{margin-top:18px; border:1px solid var(--line); border-radius:4px; overflow:hidden}
+.tensehead{background:color-mix(in srgb, var(--turmeric) 14%, transparent); padding:10px 13px;
+  font-family:var(--serif); font-size:17px; font-weight:600}
+.tensehead span{font-family:var(--sans); font-size:13px; font-weight:400; color:var(--muted); margin-left:8px}
+.tenserows{display:flex; flex-direction:column}
+.tenserow{display:flex; gap:12px; padding:11px 13px; border-top:1px solid var(--line-soft)}
+.tw{flex:none; width:88px; font-size:13px; font-weight:600; color:var(--turmeric); line-height:1.3}
+.tw span{display:block; font-weight:400; color:var(--muted); font-size:11.5px; margin-top:1px}
+.tp{flex:1; min-width:0}
+.tm{font-family:var(--serif); font-size:16.5px; line-height:1.35}
+.te{font-size:15px; color:var(--madder); margin-top:3px; display:flex; align-items:center; gap:8px}
+@media (max-width:430px){ .tenserow{flex-direction:column; gap:4px} .tw{width:auto} }
+
+/* ---------- quiz ---------- */
+.seg button.right{border-color:var(--moss); border-left-color:var(--moss);
+  background:color-mix(in srgb, var(--moss) 12%, var(--surface))}
+.seg button.wrong{border-color:var(--madder); border-left-color:var(--madder);
+  background:color-mix(in srgb, var(--madder) 10%, var(--surface))}
+.seg button:disabled{cursor:default}
+.scorebig{display:flex; align-items:baseline; gap:8px; margin:14px 0 6px}
+.scorebig b{font-family:var(--serif); font-size:46px; font-weight:700; line-height:1; color:var(--moss)}
+.scorebig span{font-size:18px; color:var(--muted)}

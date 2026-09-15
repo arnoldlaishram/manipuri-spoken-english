@@ -1,0 +1,10 @@
+node_modules/
+.next/
+out/
+.test-build/
+*.tsbuildinfo
+next-env.d.ts
+
+# Your API key lives here. Never commit it.
+.env.local
+.env*.local
