@@ -15,6 +15,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { ROUNDS, TALKS, type Talk } from "@/content/talks";
 import { useMic, type MicStatus } from "@/lib/speech";
 import { MicWall } from "./Mic";
+import { MicIcon } from "./icons";
 import { UI } from "@/content/ui";
 
 const countWords = (s: string) => s.trim().split(/\s+/).filter(Boolean).length;
@@ -154,7 +155,7 @@ function Round({
               )}
               {wall && <MicWall code={wall as never} />}
               <div className="btnrow">
-                <button className="btn" type="button" onClick={go}>{UI.fluencyGo}</button>
+                <button className="btn mic-btn" type="button" onClick={go}><MicIcon /><span>{UI.fluencyGo}</span></button>
               </div>
             </>
           )}

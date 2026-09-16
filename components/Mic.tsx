@@ -15,6 +15,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { useMic, type Heard, type MicGrant, type MicStatus } from "@/lib/speech";
 import { recorderSupported } from "@/lib/recorder";
 import { Recorder } from "./Recorder";
+import { MicIcon } from "./icons";
 import { MIC_ERR, UI } from "@/content/ui";
 
 /** Why the microphone isn't usable. "recog" = the mic works, the recogniser doesn't. */
@@ -181,7 +182,7 @@ export function Mic({
       <div className="mic">
         <button type="button" className={`mic-btn${live && status !== "starting" ? " live" : ""}`}
           onClick={tap} disabled={asking}>
-          <span className="ring" />
+          <MicIcon live={live && status !== "starting"} />
           <span>{buttonText}</span>
         </button>
         <span className="mic-note">{noteText}</span>

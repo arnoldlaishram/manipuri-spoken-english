@@ -80,6 +80,46 @@ const words = en => en.replace(/[.?!]+$/, "").split(/\s+/);
     await plain.close();
   }
 
+  // ---------- the speak button must carry a microphone, not a dot ----------
+  {
+    const m = await page.newPage ? null : null;
+    const probe = await b.newPage();
+    await probe.setViewport({ width: 420, height: 900 });
+    await probe.evaluateOnNewDocument(() => {
+      function F(){ const s=this; s.start=()=>setTimeout(()=>s.onaudiostart&&s.onaudiostart(),5); s.stop=()=>{}; s.abort=()=>{}; }
+      window.SpeechRecognition = F; window.webkitSpeechRecognition = F;
+    });
+    await probe.goto(BASE + "/", { waitUntil: "networkidle2" });
+    await probe.evaluate(() => localStorage.clear());
+    await probe.reload({ waitUntil: "networkidle2" });
+    const tap = async t => {
+      const h = await probe.evaluateHandle(s => [...document.querySelectorAll("button")].find(x => x.textContent?.includes(s)), t);
+      const el = h.asElement(); if (!el) throw new Error("no " + t);
+      await el.click(); await pause(400);
+    };
+    await tap("Level 1"); await tap("Awatpa wahei");
+    const icon = await probe.evaluate(() => {
+      const g = document.querySelector(".mic-btn .micglyph");
+      if (!g) return null;
+      const svg = g.querySelector("svg");
+      return { hasSvg: Boolean(svg), paths: svg ? svg.children.length : 0,
+               waves: g.querySelectorAll(".wave").length };
+    });
+    ok("the speak button carries a drawn microphone", Boolean(icon?.hasSvg), JSON.stringify(icon));
+    ok("it is a real mic shape, not a single dot", (icon?.paths ?? 0) >= 4, JSON.stringify(icon));
+    ok("it has a listening halo", (icon?.waves ?? 0) >= 1, JSON.stringify(icon));
+    const before = await probe.evaluate(() => document.querySelector(".mic-btn .micglyph").getBoundingClientRect().width);
+    await probe.click(".mic-btn"); await pause(700);
+    const live = await probe.evaluate(() => ({
+      live: Boolean(document.querySelector(".micglyph.live")),
+      w: document.querySelector(".mic-btn .micglyph").getBoundingClientRect().width,
+    }));
+    ok("the icon animates once it is really listening", live.live, JSON.stringify(live));
+    ok("and the icon does not change size, so nothing jumps",
+      Math.round(before) === Math.round(live.w), `${before} -> ${live.w}`);
+    await probe.close();
+  }
+
   // ---------- the question button ----------
   await fresh();
   const head = await page.evaluate(() => {
