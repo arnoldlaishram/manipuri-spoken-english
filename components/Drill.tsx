@@ -16,6 +16,7 @@ import { checkSentencePrompt } from "@/lib/prompts";
 import { Mic } from "./Mic";
 import { SayButton, SayPair } from "./Say";
 import { MarkedUp, head, tone } from "./Feedback";
+import { SpeakTarget } from "./SpeakTarget";
 import { Examples } from "./Examples";
 import { Quiz } from "./Quiz";
 import { UI } from "@/content/ui";
@@ -149,7 +150,6 @@ function Item({
   const [stage, setStage] = useState<"build" | "say">(needScaffold ? "build" : "say");
   const [built, setBuilt] = useState<{ w: string; k: number }[]>([]);
   const [order, setOrder] = useState<"building" | "wrong" | "right">("building");
-  const [peek, setPeek] = useState(false);
   const [result, setResult] = useState<{ diff: ReturnType<typeof wordDiff>; typed?: boolean } | null>(null);
 
   // When she gets the order right: mark it green, read it back, and only then
@@ -187,7 +187,12 @@ function Item({
             {UI.sayInEnglish} <span className="gloss">{UI.sayInEnglishEn}</span>
             <span className="spacer" /><span className="pill">{unit.gist}</span>
           </div>
-          <div className="phrase"><span className="words">{item.mni}</span></div>
+          {/* While she is ordering the words there is no mic, so the Manipuri
+              leads — otherwise the answer would be sitting on screen. The
+              moment the mic appears, English leads. */}
+          {stage === "build"
+            ? <div className="phrase"><span className="words">{item.mni}</span></div>
+            : <SpeakTarget en={item.en} mni={item.mni} />}
 
           {stage === "build" && (
             <>
@@ -221,11 +226,6 @@ function Item({
           {stage === "say" && !result && (
             <>
               <Mic onResult={onHeard} model={item.en} />
-              <div className="btnrow">
-                <button className="btn ghost" type="button"
-                  onClick={() => { setPeek(true); speak(item.en); }}>{UI.showMe}</button>
-              </div>
-              {peek && <div className="eg"><span className="t">{item.en}</span><SayPair text={item.en} /></div>}
             </>
           )}
         </div>

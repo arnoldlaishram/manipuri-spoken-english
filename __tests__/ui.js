@@ -107,15 +107,20 @@ const words = en => en.replace(/[.?!]+$/, "").split(/\s+/);
     });
     ok("the speak button carries a drawn microphone", Boolean(icon?.hasSvg), JSON.stringify(icon));
     ok("it is a real mic shape, not a single dot", (icon?.paths ?? 0) >= 4, JSON.stringify(icon));
-    ok("it has a listening halo", (icon?.waves ?? 0) >= 1, JSON.stringify(icon));
+    // Deliberately no animation — it read as noise on a 21px glyph. What must
+    // stay true is that listening is unmistakably signalled some other way.
     const before = await probe.evaluate(() => document.querySelector(".mic-btn .micglyph").getBoundingClientRect().width);
+    const idleLabel = await probe.evaluate(() => document.querySelector(".mic-btn")?.innerText.trim());
     await probe.click(".mic-btn"); await pause(700);
     const live = await probe.evaluate(() => ({
-      live: Boolean(document.querySelector(".micglyph.live")),
+      isLive: document.querySelector(".mic-btn")?.classList.contains("live") ?? false,
+      label: document.querySelector(".mic-btn")?.innerText.trim(),
       w: document.querySelector(".mic-btn .micglyph").getBoundingClientRect().width,
     }));
-    ok("the icon animates once it is really listening", live.live, JSON.stringify(live));
-    ok("and the icon does not change size, so nothing jumps",
+    ok("listening is signalled by the button, not by animation",
+      live.isLive && live.label !== idleLabel,
+      JSON.stringify({ ...live, idleLabel }));
+    ok("the icon does not change size, so nothing jumps",
       Math.round(before) === Math.round(live.w), `${before} -> ${live.w}`);
     await probe.close();
   }

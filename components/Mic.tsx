@@ -182,7 +182,7 @@ export function Mic({
       <div className="mic">
         <button type="button" className={`mic-btn${live && status !== "starting" ? " live" : ""}`}
           onClick={tap} disabled={asking}>
-          <MicIcon live={live && status !== "starting"} />
+          <MicIcon />
           <span>{buttonText}</span>
         </button>
         <span className="mic-note">{noteText}</span>

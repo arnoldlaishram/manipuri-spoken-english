@@ -82,17 +82,23 @@ const words = en => en.replace(/[.?!]+$/, "").split(/\s+/);
     const t = await body();
     if (/Phajei!|Amuk hanna yengsi/.test(t)) break;
     if (/Achumba English adu khanbiyu/.test(t)) {
-      const target = await page.evaluate(() => document.querySelector(".phrase .words")?.textContent?.trim());
-      const item = core.items.find(i => i.mni === target);
+      const target = await page.evaluate(() =>
+        (document.querySelector(".askline") ?? document.querySelector(".phrase .words"))?.textContent?.trim());
+      const item = core.items.find(i => i.mni === target || i.en === target);
+      if (!item) throw new Error("could not match question: " + target);
       await click(item.en); await pause(250); await click("Makha tana"); answered++;
     } else if (/achumba maongda thamu/.test(t)) {
-      const target = await page.evaluate(() => document.querySelector(".phrase .words")?.textContent?.trim());
-      const item = core.items.find(i => i.mni === target);
+      const target = await page.evaluate(() =>
+        (document.querySelector(".askline") ?? document.querySelector(".phrase .words"))?.textContent?.trim());
+      const item = core.items.find(i => i.mni === target || i.en === target);
+      if (!item) throw new Error("could not match question: " + target);
       for (const w of words(item.en)) await chip(w);
       await pause(300); await click("Makha tana"); answered++;
     } else if (/Houjik nasana haiyu/.test(t)) {
-      const target = await page.evaluate(() => document.querySelector(".phrase .words")?.textContent?.trim());
-      const item = core.items.find(i => i.mni === target);
+      const target = await page.evaluate(() =>
+        (document.querySelector(".askline") ?? document.querySelector(".phrase .words"))?.textContent?.trim());
+      const item = core.items.find(i => i.mni === target || i.en === target);
+      if (!item) throw new Error("could not match question: " + target);
       if (!(await page.$("#typeIn"))) await click("Iduna haiyu", false);
       await page.type("#typeIn", item.en); await click("Thabiyu"); await pause(400);
       await click("Makha tana"); answered++;

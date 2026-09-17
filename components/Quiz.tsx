@@ -16,6 +16,7 @@ import { practise } from "@/lib/review";
 import type { Heard } from "@/lib/speech";
 import { Mic } from "./Mic";
 import { SayButton } from "./Say";
+import { SpeakTarget } from "./SpeakTarget";
 import { UI } from "@/content/ui";
 
 type Q =
@@ -90,7 +91,11 @@ export function Quiz({
           {UI.quizTitle} <span className="gloss">{UI.quizTitleEn}</span>
           <span className="spacer" /><span className="pill">{i + 1} / {qs.length}</span>
         </div>
-        <div className="phrase"><span className="words">{q.mni}</span></div>
+        {/* choose/order are read-and-pick, so the Manipuri may lead there; the
+            spoken question puts English first because the mic needs English. */}
+        {q.kind === "say"
+          ? <SpeakTarget en={q.en} mni={q.mni} />
+          : <div className="askline">{q.mni}</div>}
 
         {q.kind === "choose" && <Choose key={i} q={q} onAnswer={advance} />}
         {q.kind === "order" && <Order key={i} q={q} onAnswer={advance} />}

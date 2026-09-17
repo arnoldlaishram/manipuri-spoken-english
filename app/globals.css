@@ -152,17 +152,8 @@ select.theme-btn{max-width:150px; background:var(--surface)}
 
 /* the microphone glyph — the button's real label, for someone who cannot
    read the words on it */
-.micglyph{position:relative; width:21px; height:21px; flex:none; display:grid; place-items:center}
-.micglyph svg{width:21px; height:21px; display:block; position:relative; z-index:1}
-/* A halo that grows out of the microphone while it is genuinely listening.
-   Contained inside the glyph, so the label never shifts between states. */
-.micglyph .wave{position:absolute; inset:0; border-radius:50%;
-  border:2px solid currentColor; opacity:0}
-.micglyph.live .wave{animation:halo 1.4s ease-out infinite}
-.micglyph.live .w2{animation-delay:.7s}
-@keyframes halo{0%{opacity:.7; transform:scale(.55)} 100%{opacity:0; transform:scale(1.85)}}
-.micglyph.live svg{animation:beat 1.4s ease-in-out infinite}
-@keyframes beat{0%,100%{transform:scale(1)} 50%{transform:scale(1.09)}}
+.micglyph{width:21px; height:21px; flex:none; display:grid; place-items:center}
+.micglyph svg{width:21px; height:21px; display:block}
 .mic-note{font-size:13.5px; color:var(--muted); flex:1; min-width:140px}
 .heard{margin-top:13px; font-size:15px; color:var(--muted)}
 .heard b{font-family:var(--serif); font-size:17.5px; color:var(--ink); font-weight:500}
@@ -385,3 +376,8 @@ select.theme-btn{max-width:150px; background:var(--surface)}
 .scorebig{display:flex; align-items:baseline; gap:8px; margin:14px 0 6px}
 .scorebig b{font-family:var(--serif); font-size:46px; font-weight:700; line-height:1; color:var(--moss)}
 .scorebig span{font-size:18px; color:var(--muted)}
+
+/* A Manipuri question she reads and answers by picking — deliberately NOT
+   styled like the big "say this" line, so she never reads it into the mic. */
+.askline{font-family:var(--serif); font-size:20px; line-height:1.4; color:var(--muted);
+  border-left:3px solid var(--line); padding-left:12px; margin:4px 0 2px}

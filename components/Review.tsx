@@ -9,6 +9,7 @@ import { bestOf, wordDiff, GOOD } from "@/lib/score";
 import type { Heard } from "@/lib/speech";
 import { Mic } from "./Mic";
 import { SayPair } from "./Say";
+import { SpeakTarget } from "./SpeakTarget";
 import { MarkedUp, head, tone } from "./Feedback";
 import { UI } from "@/content/ui";
 
@@ -37,7 +38,7 @@ export function Review({ onExit }: { onExit: () => void }) {
             <span className="spacer" />
             <span className="pill">{UI.reviewBox} {card.box + 1}</span>
           </div>
-          <div className="phrase"><span className="words">{card.mni}</span></div>
+          <SpeakTarget en={card.en} mni={card.mni} />
           {!res && <Mic model={card.en} onResult={(r: Heard) => {
             if (r.recorded) { advance(true); return; }
             const best = bestOf(card.en, [r.best, ...(r.alts ?? [])]);

@@ -112,13 +112,17 @@ function MomentStep(p: {
             {p.head} <span className="gloss">{p.headEn}</span>
             <span className="spacer" /><span className="pill">{p.modeLabel}</span>
           </div>
-          <div className="phrase" style={{ fontSize: 24 }}><span className="words">{p.q}</span></div>
-          <span className="en-twin" dangerouslySetInnerHTML={{ __html: p.qEn }} />
-          <div className="eg">
-            <span className="t" style={{ opacity: .85 }}>{p.eg}</span>
+          {/* She answers freely here, but she still needs English in front of
+              her — the example is the model, so the example leads. */}
+          <div className="phrase">
+            <span className="words">{p.eg}</span>
             <SayButton text={p.eg} />
           </div>
-          <div className="meaning" style={{ fontSize: 14, marginTop: 6 }}>{UI.dayExampleNote}</div>
+          <div className="meaning">{p.q}</div>
+          <div className="meaning" style={{ fontSize: 14, marginTop: 6 }}>
+            {UI.dayExampleNote}
+            <span className="en-twin" dangerouslySetInnerHTML={{ __html: p.qEn }} />
+          </div>
 
           {!said && (
             <>
