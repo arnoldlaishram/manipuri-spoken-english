@@ -381,3 +381,11 @@ select.theme-btn{max-width:150px; background:var(--surface)}
    styled like the big "say this" line, so she never reads it into the mic. */
 .askline{font-family:var(--serif); font-size:20px; line-height:1.4; color:var(--muted);
   border-left:3px solid var(--line); padding-left:12px; margin:4px 0 2px}
+
+/* part-finished work must be visible, or a half-done lesson looks untouched */
+.level-meter i{position:relative; overflow:hidden}
+.level-meter i em{position:absolute; left:0; top:0; bottom:0; background:var(--turmeric);
+  display:block; border-radius:2px}
+.step.part .step-tick{border-color:var(--turmeric); color:var(--turmeric); font-size:15px;
+  line-height:1; background:none}
+.step.part .step-t s{color:var(--turmeric)}

@@ -189,6 +189,11 @@ export const UI = {
     "Address bar-da leiriba 🎤 nattraga 🔒 khudam adu namduna “Microphone → Allow” khanbiyu, adudagi page asi amuk hangdoklu.",
   micDeniedEn:
     "Click the 🎤 or 🔒 icon in the address bar, set Microphone to Allow, then reload.",
+  noSaveHead: "Mapham asida progress thamba ngamde",
+  noSaveMni:
+    "Page asi atoppa page amagi manungda leiri, maram aduna browser-na progress thamba yahalde \u2014 refresh toubada ahouba maphamdagi amuk houba tai. Link asi tab anouba amada hangdoklabadi progress thamgani.",
+  noSaveEn:
+    "This page is inside another page, so the browser will not let it save anything \u2014 every refresh starts over. Open the link in its own tab and progress will be kept.",
   micNoStartHead: "Microphone hangdokpa ngamde",
   micNoStartMni:
     "Microphone adu hangdokpa ngamkhide — maram adu page asi atoppa page amagi manungda leiba yai, nattraga atoppa app amana microphone sijinnaribani. Tab anouba amada hangdoklu, nattraga atoppa app adu thingatlu.",

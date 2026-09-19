@@ -9,7 +9,7 @@ import { LEVELS, levelOf, stepId, type Step } from "@/content/levels";
 import { unitByKey } from "@/content/units";
 import { sceneByKey, SOON } from "@/content/scenes";
 import { DAY_MODES } from "@/content/moments";
-import { nextStep, useProgress, weakSpots } from "@/lib/progress";
+import { nextStep, resumeAt, useProgress, weakSpots } from "@/lib/progress";
 import { claudeStatus } from "@/lib/claude";
 import { loadRecordedAudio, useMic } from "@/lib/speech";
 import { Header } from "@/components/Header";
@@ -25,7 +25,7 @@ import { useReview } from "@/lib/review";
 import { UI } from "@/content/ui";
 
 export default function Home() {
-  const { progress, ready, markDone, markOpened, addMiss, addDay } = useProgress();
+  const { progress, ready, canSave, markDone, markOpened, markAt, addMiss, addDay } = useProgress();
   const [open, setOpen] = useState<Step | null>(null);
   const [openLevel, setOpenLevel] = useState<number | null>(null);
   const [claude, setClaude] = useState<{ ok: boolean; problem?: string }>({ ok: false });
@@ -46,6 +46,7 @@ export default function Home() {
   const micBad = grant !== "unknown" && grant !== "ok";
 
   function openStep(s: Step) { markOpened(stepId(s)); setOpen(s); }
+  const trackAt = (s: Step) => (i: number, total: number) => markAt(stepId(s), i, total);
   function finish(s: Step) { markDone(stepId(s)); }
 
   const context = describe(open);
@@ -58,6 +59,24 @@ export default function Home() {
         {!open && (
           <>
             {micBad && <MicWall code={grant} className="banner" />}
+
+            {ready && !canSave && (
+              <div className="banner">
+                <b>{UI.noSaveHead}</b>
+                <div>{UI.noSaveMni}</div>
+                <div className="en">{UI.noSaveEn}</div>
+                {typeof window !== "undefined" && (
+                  <div className="linkrow">
+                    <input readOnly value={window.location.href} aria-label="Link to this page"
+                      onFocus={e => e.currentTarget.select()} />
+                    <button className="btn ghost" type="button"
+                      onClick={() => { try { void navigator.clipboard.writeText(window.location.href); } catch {} }}>
+                      {UI.copy}
+                    </button>
+                  </div>
+                )}
+              </div>
+            )}
 
             {resume && (
               <div className="today">
@@ -136,6 +155,8 @@ export default function Home() {
             onMiss={addMiss}
             onDone={() => finish(open)}
             onExit={() => setOpen(null)}
+            startAt={resumeAt(progress, stepId(open))}
+            onAt={trackAt(open)}
           />
         )}
 
@@ -148,6 +169,8 @@ export default function Home() {
             onMiss={addMiss}
             onDone={() => finish(open)}
             onExit={() => setOpen(null)}
+            startAt={resumeAt(progress, stepId(open))}
+            onAt={trackAt(open)}
           />
         )}
 
@@ -165,6 +188,7 @@ export default function Home() {
             mode={open.mode}
             claudeOk={claude.ok}
             onTold={addDay}
+            onAt={trackAt(open)}
             onDone={() => finish(open)}
             onExit={() => setOpen(null)}
           />

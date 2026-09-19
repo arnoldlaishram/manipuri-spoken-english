@@ -10,7 +10,7 @@ import { unitByKey } from "@/content/units";
 import { sceneByKey } from "@/content/scenes";
 import { DAY_MODES } from "@/content/moments";
 import type { Progress } from "@/lib/progress";
-import { isDone, levelProgress } from "@/lib/progress";
+import { isDone, levelProgress, stepCounts, stepFraction } from "@/lib/progress";
 import { UI } from "@/content/ui";
 
 export function stepLabel(s: Step): { title: string; sub: string; kind: string } {
@@ -58,9 +58,15 @@ export function Levels({
                 <b>{UI.levelWord} {l.n} · {l.title}</b>
                 <s>{l.titleEn} — {l.blurbEn}</s>
                 <span className="level-meter">
-                  {l.steps.map((s, k) => (
-                    <i key={k} className={isDone(progress, s) ? "on" : ""} />
-                  ))}
+                  {/* part-filled, so four phrases into a six-phrase scene shows */}
+                  {l.steps.map((s, k) => {
+                    const f = stepFraction(progress, s);
+                    return (
+                      <i key={k} className={f >= 1 ? "on" : ""}>
+                        {f > 0 && f < 1 && <em style={{ width: `${Math.round(f * 100)}%` }} />}
+                      </i>
+                    );
+                  })}
                 </span>
               </span>
               <span className="level-chev">{isOpen ? "▲" : "▼"}&nbsp;{done}/{total}</span>
@@ -71,15 +77,19 @@ export function Levels({
                 {l.steps.map(s => {
                   const info = stepLabel(s);
                   const done = isDone(progress, s);
+                  const part = stepCounts(progress, s);
                   return (
                     <button
                       key={stepId(s)}
-                      className={`step${done ? " done" : ""}`}
+                      className={`step${done ? " done" : part ? " part" : ""}`}
                       type="button"
                       onClick={() => onOpen(s)}
                     >
-                      <span className="step-tick">✓</span>
-                      <span className="step-t"><b>{info.title}</b><s>{info.sub}</s></span>
+                      <span className="step-tick">{done ? "✓" : part ? "•" : ""}</span>
+                      <span className="step-t">
+                        <b>{info.title}</b>
+                        <s>{part ? `${UI.resumeHint} — ${part.at}/${part.total}` : info.sub}</s>
+                      </span>
                       <span className="step-kind">{info.kind}</span>
                     </button>
                   );

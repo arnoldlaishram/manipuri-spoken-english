@@ -104,6 +104,39 @@ before theorising about a microphone problem.** Two rounds were wasted guessing.
 
 ---
 
+## 2b. Saving progress
+
+### A cross-origin iframe blocks *all* web storage
+*Found 2026-09-19, after "every time I refresh, it starts from the beginning".*
+
+Measured inside an iframe pointed at the app:
+
+| | |
+|---|---|
+| `localStorage` | **throws** `SecurityError: Access is denied` |
+| `sessionStorage` | **throws** `SecurityError` |
+| `document.cookie` | silently does not persist |
+| `indexedDB` | present, but partitioned |
+
+So nothing can be saved in run-kit's web tile or in a published artifact. The
+code caught the exception and returned empty, which looked exactly like "the app
+forgets everything". **There is no storage fix for this — the only fix is a real
+tab**, so the app now detects it (`storageWorks()`) and says so plainly instead
+of failing silently.
+
+### Record progress per item, not per completed step
+Progress used to be written only when a whole step *finished*. Answer three
+phrases of a six-phrase scene and `done` was `{}` and every counter still read
+`0/n` — so it genuinely looked like nothing had been recorded, even in a working
+tab. Now `at` / `totals` are written as she advances, the level meter part-fills,
+the step row shows `3/9`, and reopening resumes at the right item instead of the
+top.
+
+**When someone says "it isn't saving", check granularity before checking
+storage.** Both were wrong here, and only one was obvious.
+
+---
+
 ## 3. Teaching decisions
 
 ### Worked examples before production

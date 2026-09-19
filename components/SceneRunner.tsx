@@ -25,12 +25,20 @@ type Turn = { who: "them" | "you"; line: string; repair?: string };
 type Phase = { k: "phrase"; i: number } | { k: "use"; i: number } | { k: "rp" } | { k: "done" };
 
 export function SceneRunner({
-  scene, claudeOk, onMiss, onDone, onExit, weak,
+  scene, claudeOk, onMiss, onDone, onExit, weak, startAt = 0, onAt,
 }: {
   scene: Scene; claudeOk: boolean; weak: string[];
   onMiss: (p: string) => void; onDone: () => void; onExit: () => void;
+  startAt?: number;
+  onAt?: (index: number, total: number) => void;
 }) {
-  const [phase, setPhase] = useState<Phase>({ k: "phrase", i: 0 });
+  // A scene is counted as phrases + situations, so partial work shows up.
+  const totalItems = scene.phrases.length + scene.use.length;
+  const [phase, setPhase] = useState<Phase>(
+    startAt <= 0 ? { k: "phrase", i: 0 }
+    : startAt < scene.phrases.length ? { k: "phrase", i: startAt }
+    : startAt < totalItems ? { k: "use", i: startAt - scene.phrases.length }
+    : { k: "rp" });
 
   const bar = (where: string) => (
     <div className="crumbs">
@@ -45,7 +53,10 @@ export function SceneRunner({
       <PhraseStep
         key={phase.i} scene={scene} i={phase.i} bar={bar(`Wahei ${phase.i + 1} / ${total}`)}
         onMiss={onMiss}
-        onNext={() => setPhase(phase.i + 1 >= total ? { k: "use", i: 0 } : { k: "phrase", i: phase.i + 1 })}
+        onNext={() => {
+          onAt?.(phase.i + 1, totalItems);
+          setPhase(phase.i + 1 >= total ? { k: "use", i: 0 } : { k: "phrase", i: phase.i + 1 });
+        }}
       />
     );
   }
@@ -55,7 +66,10 @@ export function SceneRunner({
       <UseStep
         key={phase.i} scene={scene} i={phase.i} bar={bar(`Sijinnou ${phase.i + 1} / ${total}`)}
         onMiss={onMiss}
-        onNext={() => setPhase(phase.i + 1 >= total ? { k: "rp" } : { k: "use", i: phase.i + 1 })}
+        onNext={() => {
+          onAt?.(scene.phrases.length + phase.i + 1, totalItems);
+          setPhase(phase.i + 1 >= total ? { k: "rp" } : { k: "use", i: phase.i + 1 });
+        }}
       />
     );
   }

@@ -20,10 +20,11 @@ type Line = { head: string; said: string };
 type Fixes = Record<number, { fix: string; note: string }>;
 
 export function MyDay({
-  mode: fixedMode, claudeOk, onDone, onExit, onTold,
+  mode: fixedMode, claudeOk, onDone, onExit, onTold, onAt,
 }: {
   mode?: DayMode; claudeOk: boolean;
   onDone: () => void; onExit: () => void; onTold: () => void;
+  onAt?: (index: number, total: number) => void;
 }) {
   const [mode, setMode] = useState<DayMode | null>(fixedMode ?? null);
   const [i, setI] = useState(0);
@@ -45,6 +46,7 @@ export function MyDay({
 
   const m = MOMENTS[i];
   const advance = () => {
+    onAt?.(i + 1, MOMENTS.length);
     if (i + 1 >= MOMENTS.length) { onTold(); setStage("story"); }
     else setI(i + 1);
   };

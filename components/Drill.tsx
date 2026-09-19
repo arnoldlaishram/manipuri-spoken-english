@@ -45,12 +45,18 @@ type Phase =
   | { kind: "done" };
 
 export function Drill({
-  unit, claudeOk, onMiss, onDone, onExit,
+  unit, claudeOk, onMiss, onDone, onExit, startAt = 0, onAt,
 }: {
   unit: Unit; claudeOk: boolean;
   onMiss: (phrase: string) => void; onDone: () => void; onExit: () => void;
+  /** Where she stopped last time. */
+  startAt?: number;
+  /** Called as she advances, so a half-finished lesson is never lost. */
+  onAt?: (index: number, total: number) => void;
 }) {
-  const [phase, setPhase] = useState<Phase>({ kind: "intro" });
+  // Straight back into the drill if she was part-way through it.
+  const [phase, setPhase] = useState<Phase>(
+    startAt > 0 && startAt < unit.items.length ? { kind: "item", i: startAt } : { kind: "intro" });
 
   if (phase.kind === "intro")
     return <Intro unit={unit} onExit={onExit} onGo={() => setPhase({ kind: "examples" })} />;
@@ -83,9 +89,10 @@ export function Drill({
         i={phase.i}
         onExit={onExit}
         onMiss={onMiss}
-        onNext={() =>
-          setPhase(phase.i + 1 >= unit.items.length ? { kind: "free" } : { kind: "item", i: phase.i + 1 })
-        }
+        onNext={() => {
+          onAt?.(phase.i + 1, unit.items.length);
+          setPhase(phase.i + 1 >= unit.items.length ? { kind: "free" } : { kind: "item", i: phase.i + 1 });
+        }}
       />
     );
 
