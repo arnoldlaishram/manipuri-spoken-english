@@ -45,7 +45,17 @@ export default function Home() {
   const weak = useMemo(() => weakSpots(progress), [progress]);
   const micBad = grant !== "unknown" && grant !== "ok";
 
-  function openStep(s: Step) { markOpened(stepId(s)); setOpen(s); }
+  /**
+   * Opening a step by name starts it at the beginning — clicking "Awatpa wahei"
+   * must show Awatpa wahei, not drop her into the middle of it. Carrying on
+   * from where she stopped is what the big button on the home screen is for.
+   */
+  const [resuming, setResuming] = useState(false);
+  function openStep(s: Step, resume = false) {
+    markOpened(stepId(s));
+    setResuming(resume);
+    setOpen(s);
+  }
   const trackAt = (s: Step) => (i: number, total: number) => markAt(stepId(s), i, total);
   function finish(s: Step) { markDone(stepId(s)); }
 
@@ -82,7 +92,7 @@ export default function Home() {
               <div className="today">
                 <h2>{UI.todayHeading}</h2>
                 <div className="sub">{UI.todayBlurb}</div>
-                <button className="bigbtn" type="button" onClick={() => openStep(resume)}>
+                <button className="bigbtn" type="button" onClick={() => openStep(resume, true)}>
                   {progress.last ? UI.resume : UI.start}
                 </button>
                 <div className="meaning" style={{ fontSize: 13.5, marginTop: 10 }}>
@@ -136,12 +146,14 @@ export default function Home() {
             <p className="lead" style={{ fontSize: 13, opacity: .8, marginTop: 26 }}>
               Voice sounding robotic? Pick a different one at the top right — or record the phrases
               yourself into <code>public/audio</code> and they play instead. See the README.
+              <span className="mni-twin">{UI.voiceTipMni}</span>
             </p>
             {!claude.ok && (
               <p className="lead" style={{ fontSize: 12.5, opacity: .65, marginTop: 12 }}>
                 Conversation practice is switched off in this build — role-play, free sentences,
                 the day story and the question box need an API key. Everything else, including all
                 the speech scoring, runs without one.
+                <span className="mni-twin">{UI.claudeOffMni}</span>
               </p>
             )}
           </>
@@ -155,7 +167,7 @@ export default function Home() {
             onMiss={addMiss}
             onDone={() => finish(open)}
             onExit={() => setOpen(null)}
-            startAt={resumeAt(progress, stepId(open))}
+            startAt={resuming ? resumeAt(progress, stepId(open)) : 0}
             onAt={trackAt(open)}
           />
         )}
@@ -169,7 +181,7 @@ export default function Home() {
             onMiss={addMiss}
             onDone={() => finish(open)}
             onExit={() => setOpen(null)}
-            startAt={resumeAt(progress, stepId(open))}
+            startAt={resuming ? resumeAt(progress, stepId(open)) : 0}
             onAt={trackAt(open)}
           />
         )}

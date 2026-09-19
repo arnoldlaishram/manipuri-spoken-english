@@ -122,17 +122,20 @@ function Intro({ unit, onGo, onExit }: { unit: Unit; onGo: () => void; onExit: (
         <div className="band b-use">
           <div className="blabel">{UI.newPattern} <span className="gloss">{UI.newPatternEn}</span></div>
           <div className="phrase" style={{ fontSize: 25 }}><span className="words">{unit.title}</span></div>
-          <div className="meaning" style={{ marginBottom: 13 }}>{unit.gistEn}</div>
+          <div className="meaning" style={{ marginBottom: 13 }}>
+            {unit.gistEn}
+            <span className="mni-twin">{unit.gist}</span>
+          </div>
           {/* `why` is authored content in content/units.ts, not user input. */}
           <div className="whybox">
             <div className="whyhead">
               <span className="whylabel">{UI.whyLabel}</span>
-              {/* She can read the Manipuri; the button reads the English aloud,
-                  because that is the language the synthesiser can actually say. */}
               <SayButton text={plain(unit.whyEn)} />
             </div>
-            <span dangerouslySetInnerHTML={{ __html: unit.why }} />
-            <span className="en-twin" dangerouslySetInnerHTML={{ __html: unit.whyEn }} />
+            {/* English first, Manipuri under it — the same way round on every
+                screen in the app, so she always knows where to look. */}
+            <span dangerouslySetInnerHTML={{ __html: unit.whyEn }} />
+            <span className="mni-twin" dangerouslySetInnerHTML={{ __html: unit.why }} />
           </div>
           <div className="pat" dangerouslySetInnerHTML={{ __html: unit.pat }} />
           <div className="eg">
@@ -253,13 +256,9 @@ function Item({
               )}
               {item.note && (
                 <span className="exp">
-                  <span dangerouslySetInnerHTML={{ __html: item.note }} />
-                  {item.noteEn && (
-                    <span className="en-twin">
-                      <span dangerouslySetInnerHTML={{ __html: item.noteEn }} />
-                      {" "}<SayButton text={plain(item.noteEn)} />
-                    </span>
-                  )}
+                  <span dangerouslySetInnerHTML={{ __html: item.noteEn ?? item.note }} />
+                  {item.noteEn && <> <SayButton text={plain(item.noteEn)} /></>}
+                  <span className="mni-twin" dangerouslySetInnerHTML={{ __html: item.note }} />
                 </span>
               )}
             </div>
@@ -307,8 +306,10 @@ function Free({
       <div className="card">
         <div className="band b-rp">
           <div className="blabel">{UI.makeYourOwn} <span className="gloss">{UI.makeYourOwnEn}</span></div>
-          <div className="phrase" style={{ fontSize: 24 }}><span className="words">{unit.free.q}</span></div>
-          <span className="en-twin" dangerouslySetInnerHTML={{ __html: unit.free.qEn }} />
+          <div className="phrase" style={{ fontSize: 24 }}>
+            <span className="words" dangerouslySetInnerHTML={{ __html: unit.free.qEn }} />
+          </div>
+          <div className="mni-twin">{unit.free.q}</div>
           <div className="pat">{unit.free.pat}</div>
           {state.s === "idle" && <Mic onResult={onHeard} />}
         </div>

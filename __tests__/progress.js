@@ -54,12 +54,20 @@ const ok = (n, c, x = "") => log.push((c ? "  ok   " : "FAIL   ") + n + (c ? "" 
      await page.evaluate(() => Boolean(document.querySelector(".level-meter i em"))));
   ok("resume points at the step she was in", /Awatpa wahei/.test(shown.resume ?? ""), shown.resume);
 
-  // --- and reopening it puts her back where she was, not at the top ---
+  // --- clicking a step BY NAME opens it at the start ---
+  // Clicking "Awatpa wahei" must show Awatpa wahei from the top. Dropping her
+  // into the middle of a lesson she chose by name is disorienting.
   await click("Level 1"); await click("Awatpa wahei");
-  const where = await page.evaluate(() => document.querySelector(".where")?.textContent?.trim());
-  ok("reopening resumes at phrase 4, not phrase 1", /4 \/ 6/.test(where ?? ""), where);
+  const byName = await page.evaluate(() => document.querySelector(".where")?.textContent?.trim());
+  ok("clicking a step by name opens it at the beginning", /1 \/ 6/.test(byName ?? ""), byName);
+  await home();
 
-  // --- finishing a step still marks it done ---
+  // --- the resume button is what carries her back to where she stopped ---
+  await click("Makha tana chatsi");
+  const resumed = await page.evaluate(() => document.querySelector(".where")?.textContent?.trim());
+  ok("the resume button lands where she stopped", /4 \/ 6/.test(resumed ?? ""), resumed);
+
+  // --- and progress keeps accumulating from there ---
   for (let i = 0; i < 3; i++) await answer();
   await home();
   const after = await page.evaluate(() => JSON.parse(localStorage.getItem("haiyu.progress.v1") ?? "{}"));

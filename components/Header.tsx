@@ -54,7 +54,7 @@ export function Header({ tag }: { tag?: string }) {
             );
           }}
         >
-          Theme
+          {UI.themeBtn}
         </button>
       </div>
     </header>

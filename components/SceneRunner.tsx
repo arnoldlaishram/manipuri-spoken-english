@@ -101,13 +101,9 @@ function PhraseStep({
           <div className="meaning">{p.mni}</div>
           {p.note && (
             <div className="meaning" style={{ fontSize: 14.5, opacity: .9 }}>
-              <span dangerouslySetInnerHTML={{ __html: p.note }} />
-              {p.noteEn && (
-                <span className="en-twin">
-                  <span dangerouslySetInnerHTML={{ __html: p.noteEn }} />
-                  {" "}<SayButton text={plain(p.noteEn)} />
-                </span>
-              )}
+              <span dangerouslySetInnerHTML={{ __html: p.noteEn ?? p.note }} />
+              {p.noteEn && <> <SayButton text={plain(p.noteEn)} /></>}
+              <span className="mni-twin" dangerouslySetInnerHTML={{ __html: p.note }} />
             </div>
           )}
           {!res && (
@@ -157,8 +153,8 @@ function UseStep({
         <div className="band b-use">
           <div className="blabel">{UI.whatDoYouSay} <span className="gloss">{UI.whatDoYouSayEn}</span></div>
           <div className="situ">
-            {u.situ}
-            <span className="en-twin">{u.situEn}</span>
+            {u.situEn}
+            <span className="mni-twin">{u.situ}</span>
           </div>
           {!res && (
             <Mic onResult={(r: Heard) => {

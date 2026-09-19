@@ -21,8 +21,8 @@ export function Examples({ unit, onNext }: { unit: Unit; onNext: () => void }) {
           {UI.examplesTitle} <span className="gloss">{UI.examplesTitleEn}</span>
         </div>
         <p className="meaning" style={{ marginTop: 0 }}>
-          {UI.examplesLead}
-          <span className="en-twin">{UI.examplesLeadEn}</span>
+          {UI.examplesLeadEn}
+          <span className="mni-twin">{UI.examplesLead}</span>
         </p>
 
         {unit.table ? (
@@ -34,8 +34,8 @@ export function Examples({ unit, onNext }: { unit: Unit; onNext: () => void }) {
                   <div key={r.when} className="tenserow">
                     <div className="tw">{r.when}<span>{r.whenEn}</span></div>
                     <div className="tp">
-                      <div className="tm">{r.mni}</div>
                       <div className="te">{r.en} <SayButton text={r.en} /></div>
+                      <div className="tm">{r.mni}</div>
                     </div>
                   </div>
                 ))}
@@ -46,8 +46,8 @@ export function Examples({ unit, onNext }: { unit: Unit; onNext: () => void }) {
           <ol className="pairs">
             {pairs.map(p => (
               <li key={p.mni + p.en}>
-                <div className="pm">{p.mni}</div>
                 <div className="pe">{p.en} <SayButton text={p.en} /></div>
+                <div className="pm">{p.mni}</div>
               </li>
             ))}
           </ol>

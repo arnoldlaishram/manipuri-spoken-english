@@ -122,8 +122,8 @@ function MomentStep(p: {
           </div>
           <div className="meaning">{p.q}</div>
           <div className="meaning" style={{ fontSize: 14, marginTop: 6 }}>
-            {UI.dayExampleNote}
-            <span className="en-twin" dangerouslySetInnerHTML={{ __html: p.qEn }} />
+            <span dangerouslySetInnerHTML={{ __html: p.qEn }} />
+            <span className="mni-twin">{UI.dayExampleNote}</span>
           </div>
 
           {!said && (

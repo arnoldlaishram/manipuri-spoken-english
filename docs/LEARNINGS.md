@@ -30,6 +30,39 @@ Manipuri leads — otherwise the answer would be sitting on screen.
 Guarded by `__tests__/language.js`, which walks each screen, checks whether a
 mic is present, and fails if the big line is not an English target sentence.
 
+### Clicking a step by name must open that step, at its start
+*Found 2026-09-19: "in Awatpa Wahai, if I click it goes to Starting."*
+
+A resume feature was added that put her back wherever she had stopped — including
+when she clicked a lesson **by name** from the level list. With progress saved,
+clicking "Awatpa wahei" dropped straight into its role-play, skipping all six
+phrases. Choosing something by name and landing somewhere else is disorienting.
+
+Resuming belongs to **one** affordance: the button on the home screen. Guarded in
+`navigation.js`, which walks all 8 levels and every step with progress seeded,
+and fails if any named step opens mid-way.
+
+### English on top, Manipuri under it — the same way round on every screen
+*Found 2026-09-19: "there is no consistency."*
+
+Some screens led with English and some with Manipuri, flipping as she moved
+through a lesson. A layout that changes between screens is a layout she has to
+re-learn on every screen. One rule now: **English above, Manipuri under it**, and
+`language.js` asserts it by comparing on-screen positions — not by character set,
+because English explanations legitimately quote Manipuri examples.
+
+### English alone is unreadable to her — check both directions
+*Found 2026-09-19: "in some cases there is only English text and no explanation."*
+
+The "every Manipuri has an English twin" rule was only half the job. Level
+descriptions, lesson subtitles, the two footer notes and the theme button were
+**English-only** — and for the level and lesson text the Manipuri already existed
+in the content and simply was never rendered.
+
+**Read the screens as someone who reads only romanized Manipuri.** Dumping each
+screen's text and reading it found these in minutes; no amount of code review
+would have. See `docs/REVIEW.md`.
+
 ### Every Manipuri string needs an English twin
 *Found 2026-09-13.*
 

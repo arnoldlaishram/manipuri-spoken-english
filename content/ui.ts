@@ -16,6 +16,13 @@ export const UI = {
   resume: "Makha tana chatsi →",
   resumeHint: "Nangna lepkhiba maphamdagi",
   levelWord: "Level",
+  themeBtn: "Machu",   // colour — light or dark
+  voiceTipMni:
+    "Khonjel adu machine-gi malli haina tarabadi, mathakki menu-dagi atoppa khonjel ama khanbiyu.",
+  claudeOffMni:
+    "Wari sanaba amasung wahang hangbagi saruk adu houjikti thingjille. Atoppa pumnamak \u2014 wahei tamba, ngangba amasung mark touba \u2014 phajana thabak toui.",
+  fluencySubMni: "Wahei amatana matam khara khaktada, ahum makhei.",
+  reviewSubMni: "Houkhraba numitta tamkhiba wahei amuk hanna ningsingbiyu.",
   levelsHeading: "Level-sing",
   levelsHeadingEn: "pick a level and start anywhere",
   soonBadge: "Soon",
@@ -107,9 +114,9 @@ export const UI = {
   examplesTitle: "Khudamsing",
   examplesTitleEn: "examples — just read and listen",
   examplesLead:
-    "Masida touba karisu leite. Manipuri wahei adu paduna, makhada English adu yengbiyu, aduga \u25b6 namduna tabiyu.",
+    "Masida touba karisu leite. English wahei adu yengbiyu, makhada masigi wahei-gi artha adu paduna, aduga \u25b6 namduna tabiyu.",
   examplesLeadEn:
-    "Nothing to do here. Read the Manipuri, look at the English under it, and press \u25b6 to hear it. Go through them as many times as you like.",
+    "Nothing to do here. Look at the English, read its meaning underneath, and press \u25b6 to hear it. Go through them as many times as you like.",
   examplesDone: "Khangle, makha tana \u2192",
 
   // end-of-lesson assessment
