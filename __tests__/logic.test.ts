@@ -187,8 +187,10 @@ ok("start button says Hourasi, not Houramsi",
   UI.start.includes("Hourasi") && !UI.start.includes("Houramsi"), UI.start);
 ok("praise says Nang khanglani",
   UI.goodHead.includes("Nang khanglani") && !/khanggani/i.test(UI.goodHead), UI.goodHead);
-ok("no corrected spelling survives anywhere in the UI strings",
-  !/Houramsi|khanggani|tang-i/i.test(JSON.stringify(UI)));
+ok("the examples instruction uses the corrected wording",
+  UI.examplesLead.includes("Masida karisu touningai leite"), UI.examplesLead);
+ok("no corrected wording survives anywhere in the UI strings",
+  !/Houramsi|khanggani|tang-i|Masida touba karisu/i.test(JSON.stringify(UI)));
 
 // ---- parsing Claude's replies ----
 const rp = parseLabels("WORKED: YES\nSAY: Of course, no problem.\nDONE: NO", ["WORKED","SAY","DONE","NOTE"] as const);

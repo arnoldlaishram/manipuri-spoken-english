@@ -57,8 +57,8 @@ function Pick({ onPick, onExit }: { onPick: (t: Talk) => void; onExit: () => voi
       <div className="card"><div className="band b-rp">
         <div className="blabel">{UI.fluencyTitle} <span className="gloss">{UI.fluencyTitleEn}</span></div>
         <div className="whybox">
-          {UI.fluencyWhy}
-          <span className="en-twin">{UI.fluencyWhyEn}</span>
+          {UI.fluencyWhyEn}
+          <span className="mni-twin">{UI.fluencyWhy}</span>
         </div>
         <p className="meaning" style={{ marginTop: 14, marginBottom: 8, fontWeight: 600 }}>
           {UI.fluencyPick}
@@ -143,10 +143,10 @@ function Round({
                 ))}
               </ul>
               <div className="meaning" style={{ marginTop: 12 }}>
-                {UI.fluencyRule1}<span className="en-twin">{UI.fluencyRule1En}</span>
+                {UI.fluencyRule1En}<span className="mni-twin">{UI.fluencyRule1}</span>
               </div>
               <div className="meaning" style={{ marginTop: 8 }}>
-                {UI.fluencyRule2}<span className="en-twin">{UI.fluencyRule2En}</span>
+                {UI.fluencyRule2En}<span className="mni-twin">{UI.fluencyRule2}</span>
               </div>
               {inFrame && !wall && (
                 <div className="meaning" style={{ fontSize: 13, opacity: .75, marginTop: 8 }}>

@@ -395,3 +395,23 @@ select.theme-btn{max-width:150px; background:var(--surface)}
 .level-t s.mni-twin,
 .step-t s.mni-twin{font-size:13px; margin-top:3px; font-family:var(--serif)}
 .lead .mni-twin{font-size:13px}
+
+/* ---------- the two languages, on every screen ----------
+   English first, then the Manipuri meaning on its own line with real space
+   between them. Inline, they ran together into one unreadable paragraph. */
+.mni-twin{
+  display:block;
+  margin-top:10px;
+  padding-top:9px;
+  border-top:1px solid var(--line-soft);
+  font-family:var(--serif);
+  font-size:15px;
+  line-height:1.55;
+  color:var(--muted);
+}
+/* inside a tight label or list row, keep the separation but drop the rule */
+.level-t .mni-twin,
+.step-t .mni-twin,
+.pairs .mni-twin{border-top:0; padding-top:0; margin-top:4px; font-size:13px}
+.lead .mni-twin{font-size:13px}
+.situ .mni-twin{font-size:16px}

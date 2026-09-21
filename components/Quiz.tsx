@@ -62,8 +62,8 @@ export function Quiz({
         <h2>{passed ? UI.quizPassHead : UI.quizAgainHead}</h2>
         <div className="scorebig"><b>{score}</b><span>/ {qs.length}</span></div>
         <p className="meaning">
-          {passed ? UI.quizPass : UI.quizAgain}
-          <span className="en-twin">{passed ? UI.quizPassEn : UI.quizAgainEn}</span>
+          {passed ? UI.quizPassEn : UI.quizAgainEn}
+          <span className="mni-twin">{passed ? UI.quizPass : UI.quizAgain}</span>
         </p>
         <div className="btnrow">
           {passed

@@ -114,7 +114,7 @@ export const UI = {
   examplesTitle: "Khudamsing",
   examplesTitleEn: "examples — just read and listen",
   examplesLead:
-    "Masida touba karisu leite. English wahei adu yengbiyu, makhada masigi wahei-gi artha adu paduna, aduga \u25b6 namduna tabiyu.",
+    "Masida karisu touningai leite. English wahei adu yengbiyu, makhada masigi wahei-gi artha adu paduna, aduga \u25b6 namduna tabiyu.",
   examplesLeadEn:
     "Nothing to do here. Look at the English, read its meaning underneath, and press \u25b6 to hear it. Go through them as many times as you like.",
   examplesDone: "Khangle, makha tana \u2192",

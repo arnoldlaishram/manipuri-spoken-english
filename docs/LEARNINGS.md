@@ -221,13 +221,15 @@ after first meeting it.
 
 ## 4. The Manipuri content
 
-**All of it is AI-drafted.** Errors found by a native speaker so far:
+**All of it is AI-drafted.** Errors found by a native speaker so far — note that
+every one was in ordinary, everyday wording, not in anything obscure:
 
 | Wrong | Right | Note |
 |---|---|---|
 | `mi amana khanggani` | `Nang khanglani` | |
 | `Ei ising tang-i` | `Ei ising darkar oi` | `tang-i` may not be a word |
 | `Houramsi` | `Hourasi` | "let's start" |
+| `Masida touba karisu leite` | `Masida karisu touningai leite` | "there is nothing to do here" |
 
 All three are locked in by tests so they cannot regress. **The riskiest area is
 verb morphology** — the tense table (`chari`, `chakhi`, `chagani`, `charure`)
