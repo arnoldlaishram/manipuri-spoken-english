@@ -88,6 +88,7 @@ export function Mic({
   const [status, setStatus] = useState<MicStatus | null>(null);
   const [asking, setAsking] = useState(false);
   const [heard, setHeard] = useState<string | null>(null);
+  const [confidence, setConfidence] = useState<number | undefined>();
   const [note, setNote] = useState<string | null>(null);
   const [wall, setWall] = useState<MicFault | null>(null);
   const [detail, setDetail] = useState<string | undefined>();
@@ -102,7 +103,8 @@ export function Mic({
   useEffect(() => () => { stopRef.current?.(); }, []);
   useEffect(() => { if (wall) wallRef.current?.scrollIntoView({ behavior: "smooth", block: "nearest" }); }, [wall]);
 
-  const canRecord = Boolean(model) && micProven && recorderSupported();
+  // startRecording asks for the microphone itself, so this need not wait for a tap.
+  const canRecord = Boolean(model) && recorderSupported();
 
   const fail = useCallback((code: MicFault, raw?: string, msg?: string) => {
     setWall(code);
@@ -138,7 +140,7 @@ export function Mic({
         setLive(false);
         setStatus(null);
         stopRef.current = null;
-        if (res) { setHeard(res.best); onResult(res); return; }
+        if (res) { setHeard(res.best); setConfidence(res.confidence); onResult(res); return; }
 
         if (err === "not-allowed" || err === "service-not-allowed") return fail("denied", err);
         // The mic just worked, so this is the recogniser failing — not a missing device.
@@ -194,11 +196,19 @@ export function Mic({
         </div>
       )}
 
-      {heard && <div className="heard">{UI.iHeard} <b>{heard}</b></div>}
+      {heard && (
+        <div className="heard">
+          {UI.iHeard} <b>{heard}</b>
+          {typeof confidence === "number" && confidence < 0.75 && (
+            <div className="guessy">{UI.lowConfidence}</div>
+          )}
+        </div>
+      )}
       <div ref={wallRef}>{wall && <MicWall code={wall} detail={detail} />}</div>
 
-      {wall && canRecord && model && (
-        <Recorder model={model} onDone={() => onResult({ best: "", alts: [], recorded: true })} />
+      {canRecord && model && (
+        <Recorder model={model} allowSkip={Boolean(wall)}
+          onDone={() => onResult({ best: "", alts: [], recorded: true })} />
       )}
 
       {typing ? (

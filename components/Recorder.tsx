@@ -10,7 +10,14 @@ import { startRecording, type Recording } from "@/lib/recorder";
 import { speak, stopSpeaking } from "@/lib/speech";
 import { UI } from "@/content/ui";
 
-export function Recorder({ model, onDone }: { model: string; onDone: () => void }) {
+export function Recorder({
+  model, onDone, allowSkip = false,
+}: {
+  model: string;
+  onDone: () => void;
+  /** Only when the mic has failed does this need to carry her forward too. */
+  allowSkip?: boolean;
+}) {
   const [state, setState] = useState<"idle" | "rec" | "done">("idle");
   const [clip, setClip] = useState<Recording | null>(null);
   const [err, setErr] = useState<string | null>(null);
@@ -76,7 +83,7 @@ export function Recorder({ model, onDone }: { model: string; onDone: () => void 
           </div>
           <p className="meaning" style={{ fontSize: 13.5, marginTop: 10 }}>{UI.recordNote}</p>
           <div className="btnrow">
-            <button className="btn" type="button" onClick={onDone}>{UI.next}</button>
+            {allowSkip && <button className="btn" type="button" onClick={onDone}>{UI.next}</button>}
             <button className="btn ghost" type="button"
               onClick={() => { setClip(null); setState("idle"); }}>{UI.recordAgain}</button>
           </div>

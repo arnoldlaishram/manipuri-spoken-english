@@ -150,6 +150,8 @@ const framed = () => { try { return window.self !== window.top; } catch { return
 export type Heard = {
   best: string;
   alts: string[];
+  /** How sure the recogniser was. Low means it guessed — worth telling her. */
+  confidence?: number;
   typed?: boolean;
   /** She recorded herself instead — there is no transcript, so do not score it. */
   recorded?: boolean;
@@ -233,6 +235,7 @@ export function useMic() {
     r.continuous = false;
 
     let best = "", alts: string[] = [], settled = false;
+    let confidence: number | undefined;
     let audioOpened = false;     // did the microphone actually open?
 
     const finish = (heard: Heard | null, err?: string) => {
@@ -250,7 +253,11 @@ export function useMic() {
       let interim = "";
       for (let i = e.resultIndex; i < e.results.length; i++) {
         const res = e.results[i];
-        if (res.isFinal) { best = res[0].transcript; alts = Array.from(res, a => a.transcript); }
+        if (res.isFinal) {
+          best = res[0].transcript;
+          confidence = res[0].confidence;
+          alts = Array.from(res, a => a.transcript);
+        }
         else interim += res[0].transcript;
       }
       onPartial(best || interim);
@@ -262,7 +269,7 @@ export function useMic() {
       finish(null, e.error || "error");
     };
     r.onend = () => {
-      if (best) return finish({ best, alts });
+      if (best) return finish({ best, alts, confidence });
       // "the microphone never opened" and "I heard nothing" are different
       // problems and need different advice. Do not conflate them.
       finish(null, audioOpened ? "nospeech" : "nostart");

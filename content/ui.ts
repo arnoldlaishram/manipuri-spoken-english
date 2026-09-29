@@ -89,6 +89,8 @@ export const UI = {
   tapThenSpeak: "Namduna, adudagi wangna haiyu.",
   tapAgain: "Amuk haininglabadi nambiyu.",
   iHeard: "Eina tabadi:",
+  lowConfidence:
+    "Machine asina chetna khangdre \u2014 mahakna khanjaduna hairibani. Nasagi khonjel adu taduna amuk yengbiyu.",
   typeInstead: "Iduna haiyu",
   typeInsteadEn: "— or type what you would say",
   send: "Thabiyu",

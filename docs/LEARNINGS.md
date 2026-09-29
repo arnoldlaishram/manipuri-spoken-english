@@ -130,6 +130,24 @@ A browser rule. Serving from one machine and opening it from another over plain
 `http://192.168.x.x` silently gives no microphone. Run it on the learner's own
 laptop.
 
+### Google's recogniser corrects her, so the score flatters her
+*Found 2026-09-29.*
+
+Web Speech has a language model behind it: it returns the most likely English
+sentence, not the sounds. A rough attempt often comes back as the exact target,
+and `wordDiff` then scores it correct. **We were scoring Google's guess.**
+
+Two things already existed and were being thrown away:
+`SpeechRecognitionAlternative.confidence` (now shown when below 0.75, so she
+knows the machine guessed) and the `Recorder` (now on every speaking screen, not
+only after a failure).
+
+**Claude cannot take audio** — the Messages API has no audio content block, so
+"send the recording to the AI" is not available at any price. Measured Chrome
+capabilities and the ranked options are in `docs/FEASIBILITY-audio.md`; the short
+version is that local Whisper on WebGPU is the only honest fix, and hearing
+yourself against the model is the best thing available without it.
+
 ### `/check` exists for this
 Open it on the learner's machine: it runs every probe, prints a
 millisecond-by-millisecond event log and a plain verdict. **Ask for that output

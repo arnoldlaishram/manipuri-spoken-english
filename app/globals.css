@@ -415,3 +415,5 @@ select.theme-btn{max-width:150px; background:var(--surface)}
 .pairs .mni-twin{border-top:0; padding-top:0; margin-top:4px; font-size:13px}
 .lead .mni-twin{font-size:13px}
 .situ .mni-twin{font-size:16px}
+
+.guessy{font-family:var(--sans); font-size:13px; color:var(--turmeric); margin-top:6px; line-height:1.5}
