@@ -42,6 +42,19 @@ they use different audio paths, and `/check` tells the two apart.
 cp .env.local.example .env.local     # then put an Anthropic API key in it
 ```
 
+### Optional: pronunciation feedback
+
+```bash
+GEMINI_API_KEY=...    # in .env.local
+```
+
+Claude cannot take audio, so this one job uses Gemini, which accepts the
+`audio/webm` the browser already records. Record yourself on any speaking
+screen, press **Eina tabiyu**, and it says what it heard, the one word worth
+fixing, and why — in Manipuri. `GET /api/speech` lists the models your key has.
+
+Without the key the button simply does not appear.
+
 Without a key everything still works except the four open-ended parts:
 role-play, the free sentence at the end of a lesson, the day-story corrections,
 and the question button. The drills, the scoring and the whole course run with

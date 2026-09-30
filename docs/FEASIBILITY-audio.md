@@ -90,6 +90,33 @@ honest feedback available, and it is now in.**
 
 ---
 
+---
+
+## Gemini — the unlock, added 2026-09-30
+
+Claude has no audio input. **Gemini does**, and it accepts `audio/webm` inline —
+exactly what `MediaRecorder` already produces, so her recording goes over with no
+conversion. 32 tokens per second of audio, so a five-second attempt is ~160
+tokens. Verified against the API docs, not assumed.
+
+`app/api/speech/route.ts` sends the clip plus the target sentence and asks it to
+judge **only the sounds**, returning what it heard, the one word most worth
+fixing, and a note in romanized Manipuri. `GET /api/speech` lists the models the
+key actually has, so the model name never has to be guessed.
+
+Without `GEMINI_API_KEY` the button simply does not appear. Nothing else changes.
+
+## Android — not needed for this
+
+The audio feature needs: a microphone, a recording, an HTTPS call. The web app
+already has all three. Android would mean rebuilding twelve lessons, fifteen
+situations, the levels, review, fluency and 273 tests in a second codebase, and
+would gain nothing for this purpose.
+
+If the goal is "an icon on her phone", that is a web app manifest, not a rewrite.
+Native would only earn its keep for background recording, offline speech models,
+or store distribution — none of which is the problem here.
+
 ## Recommendation
 
 Ship 1 and 2 (done). Test 3 on her laptop — it is one flag and might be a real

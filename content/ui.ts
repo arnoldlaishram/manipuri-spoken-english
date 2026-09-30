@@ -220,6 +220,10 @@ export const UI = {
   recordYours: "▶ Nangna haiba",
   recordModel: "▶ Achumba adu",
   recordAgain: "Amuk record toubiyu",
+  recordCheck: "Eina tabiyu",
+  recordHeard: "Eina tabadi:",
+  recordGood: "Phajana hairi \u2014 mi amana khanggani",
+  recordTryAgain: "Wahei ama semdokpa tangaiphadei",
   recordNote:
     "Masi eina yengba ngamde — adubu nasagi khonjel aduga mathakki khonjel adu changdamnaduna tabiyu. Masi tamjabagi achetpa lambi amani.",
   micNoneHead: "Microphone phangde",

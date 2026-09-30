@@ -26,6 +26,38 @@ function pickMime(): string | undefined {
 
 export type Recording = { url: string; blob: Blob; ms: number };
 
+export type SpokenFeedback = { heard: string; ok: boolean; word: string; note: string };
+
+/** Send the clip to Gemini and ask how she said it. null when not configured. */
+export async function checkPronunciation(blob: Blob, target: string): Promise<SpokenFeedback | null> {
+  const base = process.env.NEXT_PUBLIC_HAIYU_BASE ?? "";
+  const audio = await blobToBase64(blob);
+  const res = await fetch(`${base}/api/speech`, {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify({ audio, mimeType: blob.type || "audio/webm", target }),
+  });
+  if (!res.ok) return null;
+  const data = await res.json();
+  return data?.error ? null : (data as SpokenFeedback);
+}
+
+export async function pronunciationAvailable(): Promise<boolean> {
+  try {
+    const base = process.env.NEXT_PUBLIC_HAIYU_BASE ?? "";
+    return Boolean((await (await fetch(`${base}/api/speech`)).json())?.ok);
+  } catch { return false; }
+}
+
+function blobToBase64(blob: Blob): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(String(reader.result).split(",")[1] ?? "");
+    reader.onerror = () => reject(reader.error);
+    reader.readAsDataURL(blob);
+  });
+}
+
 /** Start recording. Resolves with a stop() that gives you the clip. */
 export async function startRecording(): Promise<{
   stop: () => Promise<Recording>;

@@ -6,8 +6,10 @@
 // actually fix their own pronunciation.
 
 import { useEffect, useRef, useState } from "react";
-import { startRecording, type Recording } from "@/lib/recorder";
+import { checkPronunciation, pronunciationAvailable, startRecording,
+  type Recording, type SpokenFeedback } from "@/lib/recorder";
 import { speak, stopSpeaking } from "@/lib/speech";
+import { SayButton } from "./Say";
 import { UI } from "@/content/ui";
 
 export function Recorder({
@@ -23,6 +25,11 @@ export function Recorder({
   const [err, setErr] = useState<string | null>(null);
   const ctl = useRef<Awaited<ReturnType<typeof startRecording>> | null>(null);
   const audio = useRef<HTMLAudioElement | null>(null);
+  const [canCheck, setCanCheck] = useState(false);
+  const [checking, setChecking] = useState(false);
+  const [feedback, setFeedback] = useState<SpokenFeedback | null>(null);
+
+  useEffect(() => { void pronunciationAvailable().then(setCanCheck); }, []);
 
   useEffect(() => () => {
     ctl.current?.cancel();
@@ -80,7 +87,26 @@ export function Recorder({
               audio.current?.pause();
               speak(model);
             }}>{UI.recordModel}</button>
+            {canCheck && (
+              <button className="btn" type="button" disabled={checking}
+                onClick={async () => {
+                  setChecking(true);
+                  setFeedback(await checkPronunciation(clip.blob, model));
+                  setChecking(false);
+                }}>{checking ? UI.thinking : UI.recordCheck}</button>
+            )}
           </div>
+
+          {feedback && (
+            <div className={`fb ${feedback.ok ? "ok" : "mid"}`} style={{ marginTop: 12 }}>
+              <span className="head">{feedback.ok ? UI.recordGood : UI.recordTryAgain}</span>
+              {feedback.heard && <span className="exp">{UI.recordHeard} “{feedback.heard}”</span>}
+              {feedback.word && (
+                <span className="big">{feedback.word}<SayButton text={feedback.word} /></span>
+              )}
+              {feedback.note && <span className="exp">{feedback.note}</span>}
+            </div>
+          )}
           <p className="meaning" style={{ fontSize: 13.5, marginTop: 10 }}>{UI.recordNote}</p>
           <div className="btnrow">
             {allowSkip && <button className="btn" type="button" onClick={onDone}>{UI.next}</button>}
